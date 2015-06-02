@@ -18,6 +18,7 @@
   "author": "Conrad Zimmerman <me@conradz.com>",
   "license": "ISC",
   "dependencies": {
+    "acorn": "^1.2.2",
     "browser-resolve": "^1.9.0",
     "lodash": "^3.9.3",
     "resolve": "^1.1.6"
