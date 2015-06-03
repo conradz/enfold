@@ -20,6 +20,7 @@
   "dependencies": {
     "acorn": "^1.2.2",
     "browser-resolve": "^1.9.0",
+    "buffer": "^3.2.2",
     "each-async": "^1.1.1",
     "escodegen": "^1.6.1",
     "escope": "^3.1.0",
