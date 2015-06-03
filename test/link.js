@@ -37,7 +37,7 @@ test('link graph of dependencies', function (t) {
   var entry = result.include[0]
   t.equal(entry.file, 'entry')
   t.equal(entry.id, 0)
-  t.equal(escodegen.generate(entry.ast), '__require__(2);\n__require__(1);')
+  t.equal(escodegen.generate(entry.ast), 'require(2);\nrequire(1);')
 
   var foo = result.include[1]
   t.equal(foo.file, 'foo/index.js')
@@ -47,7 +47,7 @@ test('link graph of dependencies', function (t) {
   var lib = result.include[2]
   t.equal(lib.file, 'lib/index.js')
   t.equal(lib.id, 2)
-  t.equal(escodegen.generate(lib.ast), '__require__(1);')
+  t.equal(escodegen.generate(lib.ast), 'require(1);')
 
   t.end()
 })
