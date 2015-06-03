@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "acorn": "^1.2.2",
+    "bluebird": "^2.9.27",
     "browser-resolve": "^1.9.0",
     "buffer": "^3.2.2",
     "each-async": "^1.1.1",

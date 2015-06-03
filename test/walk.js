@@ -1,11 +1,13 @@
 var walk = require('../lib/walk')
+var Enfold = require('../lib/Enfold')
 var test = require('tap').test
 var path = require('path')
 
 test('find all required files', function (t) {
   var entry = path.join(__dirname, 'fixtures', 'a.js')
   var aModule = path.join(__dirname, 'fixtures', 'node_modules', 'a', 'index.js')
-  walk([entry], done)
+  var enfold = new Enfold()
+  walk([entry], enfold, done)
 
   function done (err, result) {
     t.error(err)
@@ -25,7 +27,8 @@ test('duplicated requires', function (t) {
   var entry = path.join(__dirname, 'fixtures', 'ab.js')
   var aModule = path.join(__dirname, 'fixtures', 'node_modules', 'a', 'index.js')
   var bModule = path.join(__dirname, 'fixtures', 'node_modules', 'b', 'index.js')
-  walk([entry], done)
+  var enfold = new Enfold()
+  walk([entry], enfold, done)
 
   function done (err, result) {
     t.error(err)

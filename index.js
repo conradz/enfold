@@ -2,11 +2,13 @@ var escodegen = require('escodegen')
 var walk = require('./lib/walk')
 var link = require('./lib/link')
 var pack = require('./lib/pack')
+var Enfold = require('./lib/Enfold')
 
 module.exports = enfold
 
 function enfold (entry, cb) {
-  return walk(entry, walked)
+  var bundle = new Enfold()
+  return walk(entry, bundle, walked)
 
   function walked (err, graph) {
     if (err) {
