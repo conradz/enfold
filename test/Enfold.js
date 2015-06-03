@@ -96,6 +96,31 @@ test('invalid non-entry dependency', function (t) {
   }
 })
 
+test('invalidate removed file', function (t) {
+  var parse = mockParse()
+  var entry = path.join(fixtures, 'entry.js')
+  var a = path.join(fixtures, 'a.js')
+  parse.set(entry, 'console.log(require("./a"))')
+  parse.set(a, 'module.exports = "a"')
+
+  var bundle = new Enfold({ parse: parse })
+  runPack([entry], bundle, first)
+
+  function first (err, result) {
+    t.error(err)
+    t.equal(result, 'a')
+    parse.remove(a)
+    bundle.invalidate(a)
+
+    runPack([entry], bundle, second)
+  }
+
+  function second (err) {
+    t.ok(err)
+    t.end()
+  }
+})
+
 function runPack (entry, bundle, cb) {
   bundle.pack(entry, packed)
 
