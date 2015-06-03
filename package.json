@@ -22,8 +22,10 @@
     "browser-resolve": "^1.9.0",
     "each-async": "^1.1.1",
     "escodegen": "^1.6.1",
+    "escope": "^3.1.0",
     "estraverse": "^4.1.0",
     "lodash": "^3.9.3",
+    "process": "^0.11.1",
     "resolve": "^1.1.6"
   },
   "devDependencies": {
