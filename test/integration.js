@@ -14,7 +14,9 @@ integration('filename.js',
 
 function integration (file, expected) {
   test('integration ' + file, function (t) {
-    enfold([path.join(__dirname, 'fixtures', file)], done)
+    enfold({
+      entry: [path.join(__dirname, 'fixtures', file)]
+    }, done)
 
     function done (err, code) {
       t.error(err)
