@@ -41,3 +41,12 @@ test('global', function (t) {
     ".alert('test');")
   t.end()
 })
+
+test('inline process.env variables', function (t) {
+  process.env.TEST_VAR = 'test env'
+
+  var ast = acorn.parse('process.env.TEST_VAR')
+  ast = inject(ast)
+  t.equal(escodegen.generate(ast), "'test env';")
+  t.end()
+})
