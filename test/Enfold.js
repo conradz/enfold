@@ -12,13 +12,9 @@ test('single entry', function (t) {
   parse.set(entry, 'console.log("test")')
 
   var bundle = new Enfold({ parse: parse })
-  runPack([entry], bundle, done)
-
-  function done (err, result) {
-    t.error(err)
-    t.equal(result, 'test')
-    t.end()
-  }
+  var result = runPack([entry], bundle)
+  t.equal(result, 'test')
+  t.end()
 })
 
 test('invalidate file', function (t) {
@@ -27,22 +23,15 @@ test('invalidate file', function (t) {
   parse.set(entry, 'console.log("foo")')
 
   var bundle = new Enfold({ parse: parse })
-  runPack([entry], bundle, first)
+  var result = runPack([entry], bundle)
+  t.equal(result, 'foo')
 
-  function first (err, result) {
-    t.error(err)
-    t.equal(result, 'foo')
+  parse.set(entry, 'console.log("bar")')
+  bundle.invalidate(entry)
 
-    parse.set(entry, 'console.log("bar")')
-    bundle.invalidate(entry)
-    runPack([entry], bundle, second)
-  }
-
-  function second (err, result) {
-    t.error(err)
-    t.equal(result, 'bar')
-    t.end()
-  }
+  result = runPack([entry], bundle)
+  t.equal(result, 'bar')
+  t.end()
 })
 
 test('invalidate with different dependencies', function (t) {
@@ -53,22 +42,15 @@ test('invalidate with different dependencies', function (t) {
   parse.set(path.join(fixtures, 'bar.js'), 'module.exports = "bar"')
 
   var bundle = new Enfold({ parse: parse })
-  runPack([entry], bundle, first)
+  var result = runPack([entry], bundle)
+  t.equal(result, 'foo')
 
-  function first (err, result) {
-    t.error(err)
-    t.equal(result, 'foo')
+  parse.set(entry, 'console.log(require("./bar"))')
+  bundle.invalidate(entry)
 
-    parse.set(entry, 'console.log(require("./bar"))')
-    bundle.invalidate(entry)
-    runPack([entry], bundle, second)
-  }
-
-  function second (err, result) {
-    t.error(err)
-    t.equal(result, 'bar')
-    t.end()
-  }
+  result = runPack([entry], bundle)
+  t.equal(result, 'bar')
+  t.end()
 })
 
 test('invalid non-entry dependency', function (t) {
@@ -79,21 +61,15 @@ test('invalid non-entry dependency', function (t) {
   parse.set(a, 'module.exports = "a"')
 
   var bundle = new Enfold({ parse: parse })
-  runPack([entry], bundle, first)
+  var result = runPack([entry], bundle)
+  t.equal(result, 'a')
 
-  function first (err, result) {
-    t.error(err)
-    t.equal(result, 'a')
-    parse.set(a, 'module.exports = "b"')
-    bundle.invalidate(a)
-    runPack([entry], bundle, second)
-  }
+  parse.set(a, 'module.exports = "b"')
+  bundle.invalidate(a)
 
-  function second (err, result) {
-    t.error(err)
-    t.equal(result, 'b')
-    t.end()
-  }
+  result = runPack([entry], bundle)
+  t.equal(result, 'b')
+  t.end()
 })
 
 test('invalidate removed file', function (t) {
@@ -104,42 +80,24 @@ test('invalidate removed file', function (t) {
   parse.set(a, 'module.exports = "a"')
 
   var bundle = new Enfold({ parse: parse })
-  runPack([entry], bundle, first)
+  var result = runPack([entry], bundle)
+  t.equal(result, 'a')
 
-  function first (err, result) {
-    t.error(err)
-    t.equal(result, 'a')
-    parse.remove(a)
-    bundle.invalidate(a)
+  parse.remove(a)
+  bundle.invalidate(a)
 
-    runPack([entry], bundle, second)
-  }
-
-  function second (err) {
-    t.ok(err)
-    t.end()
-  }
+  t.throws(function () { runPack([entry], bundle) })
+  t.end()
 })
 
-function runPack (entry, bundle, cb) {
-  bundle.pack(entry, packed)
-
-  function packed (err, result) {
-    if (err) {
-      return cb(err)
+function runPack (entry, bundle) {
+  var code = bundle.pack(entry).code
+  var results = []
+  vm.runInNewContext(code, {
+    console: {
+      log: function (value) { results.push(value) }
     }
+  })
 
-    var results = []
-    try {
-      vm.runInNewContext(result, {
-        console: {
-          log: function (value) { results.push(value) }
-        }
-      })
-    } catch (e) {
-      return cb(e)
-    }
-
-    return cb(null, results.join('\n'))
-  }
+  return results.join('\n')
 }

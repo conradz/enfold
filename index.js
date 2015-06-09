@@ -2,7 +2,7 @@ var Enfold = require('./lib/Enfold')
 
 module.exports = enfold
 
-function enfold (opts, cb) {
+function enfold (opts) {
   var bundle = new Enfold(opts)
-  bundle.pack(opts.entry, cb)
+  return bundle.pack(opts.entry)
 }

@@ -6,19 +6,16 @@ module.exports = mockParse
 function mockParse (files) {
   files = files || {}
 
-  function parse (file, cb) {
+  function parse (file) {
     if (!has(files, file)) {
-      return cb(new Error('invalid file'))
+      throw new Error('invalid file')
     }
 
-    var ast
-    try {
-      ast = acorn.parse(files[file])
-    } catch(e) {
-      return cb(e)
+    var source = files[file]
+    return {
+      source: source,
+      ast: acorn.parse(files[file])
     }
-
-    return cb(null, ast)
   }
 
   parse.set = function (file, contents) {
