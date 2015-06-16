@@ -8,7 +8,7 @@ test('pack into one bundle', function (t) {
   var graph = {
     entry: [0],
     include: [
-      { id: 0, file: 'entry', ast: acorn.parse('require(1)') },
+      { id: 0, file: 'entry', ast: acorn.parse('__require__(1)') },
       { id: 1, file: 'lib', ast: acorn.parse('console.log("test")') }
     ]
   }
@@ -23,7 +23,7 @@ test('run pack', function (t) {
   var graph = {
     entry: [0],
     include: [
-      { id: 0, file: 'entry', ast: acorn.parse('require(1)') },
+      { id: 0, file: 'entry', ast: acorn.parse('__require__(1)') },
       { id: 1, file: 'lib', ast: acorn.parse('test("in lib")') }
     ]
   }

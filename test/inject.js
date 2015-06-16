@@ -3,6 +3,14 @@ var acorn = require('acorn')
 var escodegen = require('escodegen')
 var test = require('tap').test
 
+test('create copy of ast', function (t) {
+  var ast = acorn.parse('process.nextTick()')
+  var result = inject(ast)
+  t.notEqual(ast, result)
+  t.deepEqual(ast, acorn.parse('process.nextTick()'))
+  t.end()
+})
+
 test('require process', function (t) {
   var ast = acorn.parse('process.nextTick()')
   ast = inject(ast)
